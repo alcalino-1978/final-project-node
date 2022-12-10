@@ -1,12 +1,14 @@
 const express = require('express');
 require('dotenv').config();
 
+// Auth
+const session = require('express-session');
+const passport = require('passport');
+require('./middlewares/passport'); // Requerimos nuestro archivo de configuración
 
 // Utils
-const connect = require('./utils/db');
-const passport = require('passport');
-const session = require('express-session');
-require('./middlewares/passport'); // Requerimos nuestro archivo de configuración
+const { connect } = require('./utils/db');
+
 
 // Server config
 connect();
