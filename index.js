@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
     session({
-      secret: 'upgradehub_node', // ¡Este secreto tendremos que cambiarlo en producción!
+      secret: process.env.SESSION_SECRET || 'upgradehub_node', // ¡Este secreto tendremos que cambiarlo en producción!
       resave: false, // Solo guardará la sesión si hay cambios en ella.
       saveUninitialized: false, // Lo usaremos como false debido a que gestionamos nuestra sesión con Passport
       cookie: {
