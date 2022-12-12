@@ -12,7 +12,7 @@ const patientSchema = new Schema (
             enum:['Male', 'Female']
         },
         phoneNumber: { type: String },
-        email: { type: String, required: true  },
+        email: { type: String, required: true },
         insurance: { type: String, required: true },
         illness: { 
             type: String,
