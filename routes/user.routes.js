@@ -1,64 +1,11 @@
-const express = require('express');
-const passport = require('passport');
-
+const express = require("express");
 const router = express.Router();
+//importamos las funciones del controlador y del middleware
+const { register, login, isAuth, logout } = require("../auth/jwt");
 
-// Post Register
-router.post('/register', (req, res, next) => {
-    // Invocamos a la autenticación de Passport
-
-		const done = (error, user) => {
-        // Si hay un error, llamamos a nuestro controlador de errores
-        if (error) {
-            return next(error);
-        }
-        user.password = null;
-            // res.status(201).json(user);
-        //     // Método de passport
-            req.logIn(user, (error) => {
-            // Si hay un error logeando al usuario, resolvemos el controlador
-            if (error) {
-                return next(error);
-            }
-            // Si no hay error, devolvemos al usuario logueado
-           return res.status(201).json(user)
-        });
-        
-    };
-
-    passport.authenticate('register', done)(req); // ¡No te olvides de invocarlo aquí!
-});
-
-
-// Post Login
-router.post('/login', (req, res, next) => {
-
-    const done = (error, user) => {
-        // Si hay un error, llamamos a nuestro controlador de errores
-        if (error) {
-            return next(error);
-        }
-        // Método de passport
-        req.logIn(user, (error) => {
-        // Si hay un error logeando al usuario, resolvemos el controlador
-            if (error) {
-                return next(error);
-            }
-            // Si no hay error, devolvemos al usuario logueado
-            return res.status(200).json(user)
-    });
-        
-    };
-    passport.authenticate('login', done)(req);
-});
-
-// Post logout
-
-router.post('/logout', function(req, res, next){
-    req.logout(function(err) {
-      if (err) { return next(err); }
-      return res.status(200).send();
-    });
-  });
+router.post("/register", register);
+router.post("/login", login);
+//le añadimos el middleware para que solo sea accesible si el user esta logueado
+router.post("/logout", [isAuth], logout)
 
 module.exports = router;

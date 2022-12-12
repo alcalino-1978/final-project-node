@@ -1,5 +1,5 @@
 const express = require('express');
-const Doctor = require('../models/Doctor');
+const Insurance = require('../models/Insurance');
 
 const router = express.Router();
 
@@ -10,13 +10,13 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   const { viewAll } = req.query;
   try {
-    let doctors = [];
+    let insurances = [];
     if (viewAll === 'true') {
-      doctors = await Doctor.find().populate('patients');
+      insurances = await Insurance.find().populate('patients');
     } else {
-      doctors = await Doctor.find();
+      insurances = await Insurance.find();
     }
-    return res.status(200).json(doctors);
+    return res.status(200).json(insurances);
   } catch (error) {
     return next(error);
   }
@@ -24,7 +24,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const newDoctor = new Doctor({
+    const newInsurance = new Insurance({
       fullName: req.body.fullName,
       age: req.body.age,
       gender: req.body.gender,
@@ -34,8 +34,8 @@ router.post('/', async (req, res, next) => {
       patients: [],
       user: [],
     });
-    const createdDoctor = await newDoctor.save();
-    return res.status(201).json(createdDoctor);
+    const createdInsurance = await newInsurance.save();
+    return res.status(201).json(createdInsurance);
   } catch (error) {
     next(error);
   }
