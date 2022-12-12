@@ -1,7 +1,5 @@
 const express = require('express');
-const { route } = require('express/lib/application');
 const mongoose = require('mongoose');
-
 const Patient = require('../models/Patient');
 
 const router = express.Router();
