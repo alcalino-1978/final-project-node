@@ -20,7 +20,6 @@ const doctorsRoutes = require('./routes/doctor.routes');
 const userRoutes = require('./routes/user.routes');
 // const insuranceRoutes = require('./routes/insurance.routes');
 
-
 app.get('/', (req, res) => {
     // res.send('<h1>Hello World!</h1>');
     res.sendFile(__dirname + '/index.html');
