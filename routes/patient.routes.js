@@ -1,5 +1,7 @@
 const express = require('express');
+const { route } = require('express/lib/application');
 const mongoose = require('mongoose');
+
 const Patient = require('../models/Patient');
 
 const router = express.Router();
@@ -35,13 +37,12 @@ router.get('/:id', async (req, res, next) => {
 
 // Post patient
 router.post('/', async (req, res, next) => {
-    const { fullName, age, gender, phoneNumber, email, insurance, illness, doctor = 'Julius Hibbert' } = req.body;
+    const { fullName, age, gender, phoneNumber, insurance, illness, doctor = 'Julius Hibbert' } = req.body;
     const patient = {
         fullName,
         age,
         gender,
         phoneNumber,
-        email,
         insurance,
         illness,
         doctor,
