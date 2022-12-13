@@ -14,16 +14,19 @@ const patientSchema = new Schema (
         phoneNumber: { type: String },
         email: { type: String, required: true },
         insurance: { type: String, required: true },
+        registered: { type: Boolean },
+        password: { 
+            type: String,
+            required: () => {
+                return this.registered === true;
+            }
+         },
         illness: { 
             type: String,
             required: true,
             enum:['Lupus', 'Covid', 'Diarrhea', 'Mononucleosis', 'Pneumonia']
         },
-        doctor: {
-            type: String,
-            required: true,
-            enum:['Julius Hibbert', 'Gregory House', 'Meredith Grey', 'Nick Riviera']
-        },
+        doctor: [{ type:mongoose.Schema.Types.ObjectId, ref: "Doctor" }]
     },
     {
         timestamps: true

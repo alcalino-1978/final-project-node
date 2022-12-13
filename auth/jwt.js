@@ -23,7 +23,7 @@ const register = async (req, res, next) => {
 
     return res.json({
       status: 201,
-      message: 'Doctor registrado correctamente',
+      message: 'Usuario registrado correctamente',
       data: userDb
     });
   } catch (err) {

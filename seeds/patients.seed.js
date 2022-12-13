@@ -13,8 +13,9 @@ const patientsList = [
       phoneNumber: "982-948-8357",
       email: "mlinskill@example.com",
       insurance: "Sanitas",
+      registered: false,
       illness: 'Lupus',
-      doctor: "Meredith Grey"
+      doctor: "639847f704b335c55972c191"
     },
     {
       fullName: "Amelita Meachan",
@@ -24,7 +25,7 @@ const patientsList = [
       email: "ameachan@example.com",
       insurance: "Asisa",
       illness: 'Covid',
-      doctor: "Gregory House"
+      doctor: "639847f704b335c55972c194"
     },
     {
       fullName: "West Mate",
@@ -34,7 +35,7 @@ const patientsList = [
       email: "wmate@example.com",
       insurance: "Adeslas",
       illness: 'Diarrhea',
-      doctor: "Nick Riviera"
+      doctor: "639847f704b335c55972c193"
     },
     {
       fullName: "Staci Varnam",
@@ -44,7 +45,7 @@ const patientsList = [
       email: "svarnam@example.com",
       insurance: "DKV",
       illness: 'Mononucleosis',
-      doctor: "Julius Hibbert"
+      doctor: "639847f704b335c55972c192"
     },
     {
       fullName: "Cary Lassells",
@@ -54,7 +55,7 @@ const patientsList = [
       email: "classells@example.com",
       insurance: "Maphre",
       illness: 'Pneumonia',
-      doctor: "Gregory House"
+      doctor: "639847f704b335c55972c194"
     },
     {
       fullName: "Paxon Butlin",
@@ -64,7 +65,7 @@ const patientsList = [
       email: "pbutlin@example.com",
       insurance: "Asisa",
       illness: 'Lupus',
-      doctor: "Nick Riviera"
+      doctor: "639847f704b335c55972c193"
     },
     {
       fullName: "Denni Oury",
@@ -74,7 +75,7 @@ const patientsList = [
       email: "doury@example.com",
       insurance: "Sanitas",
       illness: 'Lupus',
-      doctor: "Meredith Grey"
+      doctor: "639847f704b335c55972c191"
     },
     {
       fullName: "Johnna Olver",
@@ -82,9 +83,9 @@ const patientsList = [
       gender: "Female",
       phoneNumber: "658-601-2777",
       email: "jolver@example.com",
-      insurance: "Private",
+      insurance: "Otros",
       illness: 'Covid',
-      doctor: "Julius Hibbert"
+      doctor: "639847f704b335c55972c192"
     },
     {
       fullName: "Steve Costerd",
@@ -94,7 +95,7 @@ const patientsList = [
       email: "scosterd@example.com",
       insurance: "DKV",
       illness: 'Lupus',
-      doctor: "Meredith Grey"
+      doctor: "639847f704b335c55972c191"
     },
     {
       fullName: "Thebault Moan",
@@ -104,7 +105,7 @@ const patientsList = [
       email: "tmoan@example.com",
       insurance: "Adeslas",
       illness: 'Pneumonia',
-      doctor: "Gregory House"
+      doctor: "639847f704b335c55972c194"
     }
   ]
   ;
