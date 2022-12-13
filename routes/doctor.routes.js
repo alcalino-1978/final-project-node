@@ -53,19 +53,29 @@ router.get('/:id', async (req, res, next) => {
 
 // Post Doctor
 router.post('/', async (req, res, next) => {
+  const { fullName, age, gender, phoneNumber, email, insurance, patients, user } = req.body;
+  const doctor = {
+    fullName,
+    age,
+    gender,
+    phoneNumber,
+    email,
+    insurance,
+    patients,
+    user
+  }
   try {
-    const newDoctor = new Doctor({
-      fullName: req.body.fullName,
-      age: req.body.age,
-      gender: req.body.gender,
-      phoneNumber: req.body.phoneNumber,
-      email: req.body.email,
-      insurance: req.body.insurance,
-      patients: [],
-      user: [],
-    });
-    const createdDoctor = await newDoctor.save();
-    return res.status(201).json(createdDoctor);
+    const newDoctor = new Doctor(doctor);
+
+    // Check If doctor exists
+    const result = await Doctor.exists({ fullName: newDoctor.fullName });
+    if (result) {
+      return res.status(404).json('This doctor fullName already exists');
+    } else {
+      console.log(newDoctor.fullName);
+      const createdDoctor = await newDoctor.save();
+      return res.status(201).json(createdDoctor);
+    }
   } catch (error) {
     next(error);
   }

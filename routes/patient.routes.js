@@ -6,7 +6,8 @@ const { isAuth } = require('../auth/jwt');
 const router = express.Router();
 
 // Get alls patient
-router.get('/', [isAuth], async (req, res, next) => {
+//router.get('/', [isAuth], async (req, res, next) => {
+router.get('/',  async (req, res, next) => {
   let patients = [];
   try {
     patients = await Patient.find();
@@ -52,8 +53,16 @@ router.post('/', async (req, res, next) => {
   }
   try {
     const newPatient = new Patient(patient);
-    const createdPatient = await newPatient.save();
-    return res.status(201).json(createdPatient);
+
+    // Check If patient exists
+    const result = await Patient.exists({ fullName: newPatient.fullName });
+    if (result) {
+      return res.status(404).json('This patient fullName already exists');
+    } else {
+      console.log(newPatient.fullName);
+      const createdPatient = await newPatient.save();
+      return res.status(201).json(createdPatient);
+    }
   } catch (error) {
     next(error);
   }
