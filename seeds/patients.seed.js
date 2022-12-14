@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { DB_URL } = require('../utils/db');
+const Doctor = require('../models/Doctor');
 
 
 
@@ -15,7 +16,6 @@ const patientsList = [
       insurance: "Sanitas",
       registered: false,
       illness: 'Lupus',
-      doctor: "639847f704b335c55972c191"
     },
     {
       fullName: "Amelita Meachan",
@@ -25,7 +25,6 @@ const patientsList = [
       email: "ameachan@example.com",
       insurance: "Asisa",
       illness: 'Covid',
-      doctor: "639847f704b335c55972c194"
     },
     {
       fullName: "West Mate",
@@ -35,7 +34,6 @@ const patientsList = [
       email: "wmate@example.com",
       insurance: "Adeslas",
       illness: 'Diarrhea',
-      doctor: "639847f704b335c55972c193"
     },
     {
       fullName: "Staci Varnam",
@@ -45,7 +43,6 @@ const patientsList = [
       email: "svarnam@example.com",
       insurance: "DKV",
       illness: 'Mononucleosis',
-      doctor: "639847f704b335c55972c192"
     },
     {
       fullName: "Cary Lassells",
@@ -55,7 +52,6 @@ const patientsList = [
       email: "classells@example.com",
       insurance: "Maphre",
       illness: 'Pneumonia',
-      doctor: "639847f704b335c55972c194"
     },
     {
       fullName: "Paxon Butlin",
@@ -65,7 +61,6 @@ const patientsList = [
       email: "pbutlin@example.com",
       insurance: "Asisa",
       illness: 'Lupus',
-      doctor: "639847f704b335c55972c193"
     },
     {
       fullName: "Denni Oury",
@@ -75,7 +70,6 @@ const patientsList = [
       email: "doury@example.com",
       insurance: "Sanitas",
       illness: 'Lupus',
-      doctor: "639847f704b335c55972c191"
     },
     {
       fullName: "Johnna Olver",
@@ -85,7 +79,6 @@ const patientsList = [
       email: "jolver@example.com",
       insurance: "Otros",
       illness: 'Covid',
-      doctor: "639847f704b335c55972c192"
     },
     {
       fullName: "Steve Costerd",
@@ -95,7 +88,6 @@ const patientsList = [
       email: "scosterd@example.com",
       insurance: "DKV",
       illness: 'Lupus',
-      doctor: "639847f704b335c55972c191"
     },
     {
       fullName: "Thebault Moan",
@@ -105,7 +97,6 @@ const patientsList = [
       email: "tmoan@example.com",
       insurance: "Adeslas",
       illness: 'Pneumonia',
-      doctor: "639847f704b335c55972c194"
     }
   ]
   ;
@@ -122,6 +113,19 @@ mongoose
     if (allPatients.length) {
         await Patient.collection.drop();
     }
+    const allDoctors = await Doctor.find();
+    patientsDocuments.forEach(async patient => {
+      const random = Math.floor(Math.random() * allDoctors.length);
+      const doctor = allDoctors[random];
+      patient.doctor = doctor.id;
+
+      await Doctor.findByIdAndUpdate(
+        doctor._id,
+        { $push: { patients: patient._id , } },
+        { new: true }
+        ); 
+    });
+
 })
 .catch((err) => console.log(`Error deleting data: ${err}`))
 .then(async () => {

@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/',  async (req, res, next) => {
   let patients = [];
   try {
-    patients = await Patient.find();
+    patients = await Patient.find().populate('doctor');
     return res.status(200).json(patients);
   } catch {
     return next(err);

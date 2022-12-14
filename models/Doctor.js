@@ -22,7 +22,7 @@ const doctorSchema = new Schema (
             // required: true,
             enum:['Sanitas', 'Asisa', 'Adeslas', 'DKV', 'Maphre', 'Otros']
         },
-        patients: [{ type:mongoose.Schema.Types.ObjectId, ref: "Patient", autopopulate: true }],
+        patients: [{ type:mongoose.Schema.Types.ObjectId, ref: "Patient" }],
         user: [{ type:mongoose.Schema.Types.ObjectId, ref: "User" }],
     },
     {

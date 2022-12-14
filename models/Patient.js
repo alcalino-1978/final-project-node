@@ -26,7 +26,7 @@ const patientSchema = new Schema (
             required: true,
             enum:['Lupus', 'Covid', 'Diarrhea', 'Mononucleosis', 'Pneumonia']
         },
-        doctor: { type: String, required: true },
+        doctor: { type:mongoose.Schema.Types.ObjectId, ref: "Doctor" },
     },
     {
         timestamps: true

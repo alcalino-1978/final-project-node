@@ -12,11 +12,7 @@ router.get('/', async (req, res, next) => {
     if (viewAll === 'true') {
       console.log(doctors);
       // doctors = await Doctor.find().populate('patients'
-      doctors = await Doctor.find().populate({
-        path: 'patients',
-        select: 'doctor'
-        }
-      );
+      doctors = await Doctor.find().populate('patients');
     } else {
       doctors = await Doctor.find();
     }
