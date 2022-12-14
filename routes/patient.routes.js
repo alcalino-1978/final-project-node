@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Patient = require('../models/Patient');
 const { isAuth } = require('../auth/jwt');
 
+const fileMiddleware = require('../middlewares/file.middleware');
 const router = express.Router();
 
 // Get alls patient
@@ -50,7 +51,8 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // Post patient
-router.post('/', [isAuth], async (req, res, next) => {
+router.post('/', [fileMiddleware.upload.single('picture'), fileMiddleware.uploadToCloudinary], async (req, res, next) => {
+  const cloudinaryUrl = req.file_url ? req.file_url : null;
   const { fullName, age, gender, phoneNumber, email, insurance, registered, password, illness, doctor = 'Julius Hibbert' } = req.body;
   const patient = {
     fullName,
@@ -63,6 +65,7 @@ router.post('/', [isAuth], async (req, res, next) => {
     password,
     illness,
     doctor,
+    picture: cloudinaryUrl
   }
   try {
     const newPatient = new Patient(patient);
