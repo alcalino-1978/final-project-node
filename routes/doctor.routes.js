@@ -1,18 +1,23 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { isAuth } = require('../auth/jwt');
 const Doctor = require('../models/Doctor');
 
 const router = express.Router();
 
 // viewAll=true
 router.get('/', async (req, res, next) => {
-  const { viewAll } = req.query;
+  const { fullInfo, insuranceQuery } = req.query;
   try {
     let doctors = [];
-    if (viewAll === 'true') {
+    if (fullInfo === 'true') {
       console.log(doctors);
-      // doctors = await Doctor.find().populate('patients'
       doctors = await Doctor.find().populate('patients');
+    } else if(insuranceQuery) {
+      doctors = await Doctor.find({insurance: insuranceQuery});
+      if (doctors.length === 0) {
+        return res.status(404).json(`${insuranceQuery} not exist in Database`);
+      }
     } else {
       doctors = await Doctor.find();
     }
@@ -30,11 +35,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const idObject = mongoose.Types.ObjectId(id);
     console.log(idObject);
-    const doctor = await Doctor.findById(idObject).populate({
-      path: 'patients',
-      select: 'doctor'
-      }
-    );
+    const doctor = await Doctor.findById(idObject).populate('patients');
     console.log(doctor);
     if (doctor) {
       return res.status(200).json(doctor);
@@ -48,7 +49,7 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // Post Doctor
-router.post('/', async (req, res, next) => {
+router.post('/', [isAuth], async (req, res, next) => {
   const { fullName, age, gender, phoneNumber, email, insurance, patients, user } = req.body;
   const doctor = {
     fullName,
@@ -78,7 +79,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // Delete Doctor
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', [isAuth], async (req, res, next) => {
   try {
     const { id } = req.params;
     const nameDoctor = await Doctor.findById(id).lean();
@@ -92,7 +93,7 @@ router.delete('/:id', async (req, res, next) => {
 
 // Put Update by ID
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', [isAuth], async (req, res, next) => {
   try {
     const { id } = req.params;
     const doctorModify = new Doctor(req.body);

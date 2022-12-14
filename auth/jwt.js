@@ -13,19 +13,34 @@ const register = async (req, res, next) => {
     newUser.email = req.body.email;
     const pwdHash = await bcrypt.hash(req.body.password, 10);
     newUser.password = pwdHash;
+    console.log(newUser.id);
 
+    // Check If User exists before create it
+    const result = await User.exists({ email: newUser.email });
+    if (result) {
+      return res.status(404).json('This User already exists!');
+    } else {
+      const userDb = await newUser.save();
+      //Pnt. mejora: autenticar directamente al usuario
+      newUser.password = null;
+      //creamos el token con el id y el name del user
+      const token = jwt.sign(
+        {
+          id: newUser._id,
+          email: newUser.email
+        },
+        req.app.get("secretKey"),
+        { expiresIn: "1h" }
+      );
+      //devolvemos el usuario y el token.
+      return res.json({
+        status: 201,
+        message: 'Usuario registrado y logado correctamente',
+        data: { userDb, token: token }
+      });
+    }
+    console.log(token)
 
-    //Pnt. mejora: comprobar si el user existe antes de guardar
-    
-    const userDb = await newUser.save();
-    
-    //Pnt. mejora: autenticar directamente al usuario
-
-    return res.json({
-      status: 201,
-      message: 'Usuario registrado correctamente',
-      data: userDb
-    });
   } catch (err) {
     return next(err);
   }

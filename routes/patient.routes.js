@@ -8,9 +8,22 @@ const router = express.Router();
 // Get alls patient
 //router.get('/', [isAuth], async (req, res, next) => {
 router.get('/',  async (req, res, next) => {
+  const { illnessQuery, insuranceQuery } = req.query;
   let patients = [];
   try {
-    patients = await Patient.find().populate('doctor');
+    if (illnessQuery) {
+      patients = await Patient.find({illness: illnessQuery});
+      if (patients.length === 0) {
+        return res.status(404).json(`${illnessQuery} not exist in Database`);
+      }
+    } else if(insuranceQuery) {
+      patients = await Patient.find({insurance: insuranceQuery});
+      if (patients.length === 0) {
+        return res.status(404).json(`${insuranceQuery} not exist in Database`);
+      }
+    } else {
+      patients = await Patient.find().populate('doctor');
+    }
     return res.status(200).json(patients);
   } catch {
     return next(err);
@@ -37,7 +50,7 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // Post patient
-router.post('/', async (req, res, next) => {
+router.post('/', [isAuth], async (req, res, next) => {
   const { fullName, age, gender, phoneNumber, email, insurance, registered, password, illness, doctor = 'Julius Hibbert' } = req.body;
   const patient = {
     fullName,
@@ -69,7 +82,7 @@ router.post('/', async (req, res, next) => {
 })
 
 // Delete Patient
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', [isAuth], async (req, res, next) => {
   try {
     const { id } = req.params;
     const namePatient = await Patient.findById(id).lean();
@@ -83,7 +96,7 @@ router.delete('/:id', async (req, res, next) => {
 
 // Put Update by ID
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', [isAuth], async (req, res, next) => {
   try {
     const { id } = req.params;
     const patientModify = new Patient(req.body);

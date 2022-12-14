@@ -30,7 +30,5 @@ const doctorSchema = new Schema (
     }
 )
 
-doctorSchema.plugin(require('mongoose-autopopulate'));
-
 const Doctor = mongoose.model('Doctor', doctorSchema);
 module.exports = Doctor;
