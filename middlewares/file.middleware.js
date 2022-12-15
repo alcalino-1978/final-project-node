@@ -6,7 +6,7 @@ const fs = require('fs');
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: '',
+    folder: 'tmp',
     format: async (req, file) => 'png', // supports promises as well
     public_id: (req, file) => 'computed-filename-using-request',
   },
