@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Patient = require('../models/Patient');
+const Doctor = require('../models/Doctor');
 const { isAuth } = require('../auth/jwt');
 
 const fileMiddleware = require('../middlewares/file.middleware');
@@ -51,7 +52,7 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // Post patient
-router.post('/', parser.single('image'), async (req, res, next) => {
+router.post('/', [fileMiddleware.parser.single('image'), fileMiddleware.uploadToCloudinary], async (req, res, next) => {
   const cloudinaryUrl = req.file.path ? req.file.path : null;
   const { fullName, age, gender, phoneNumber, email, insurance, registered, password, illness, doctor = 'Julius Hibbert' } = req.body;
   const patient = {
@@ -89,7 +90,20 @@ router.delete('/:id', [isAuth], async (req, res, next) => {
   try {
     const { id } = req.params;
     const namePatient = await Patient.findById(id).lean();
+    const namePatientDoctor = await Doctor.findById(id).lean();
     console.log(namePatient.fullName);
+    
+    const patientRelations = await Doctor.find({}).select('patients -_id');
+    console.log(patientRelations);
+    patientRelations.forEach(async patient => {
+      for (const iterator of patient) {
+        if (iterator._id === id) {
+          iterator.remove();
+        }
+        
+      }
+    });
+
     await Patient.findByIdAndDelete(id);
     return res.status(200).json(`Patient ${namePatient.fullName} has been deleted sucessfully!`)
   } catch (error) {
