@@ -92,18 +92,13 @@ router.delete('/:id', [isAuth], async (req, res, next) => {
     const namePatient = await Patient.findById(id).lean();
     console.log(namePatient.fullName);
     
-    const patientRelations = await Doctor.find({}).select('patients -_id');
-    console.log(patientRelations);
-    patientRelations.forEach(async patient => {
-      console.log(patient);
-      // for (const iterator of patient) {
-      //   if (iterator._id === id) {
-      //     iterator.remove();
-      //   }
-        
-      // }
+    // const patientRelations = await Doctor.find({}).select('patients -_id');
+    // console.log(patientRelations);
+    await Doctor.updateMany({}, {
+      $pullAll: {
+          patients: [{_id: id}],
+      },
     });
-
     await Patient.findByIdAndDelete(id);
     return res.status(200).json(`Patient ${namePatient.fullName} has been deleted sucessfully!`)
   } catch (error) {

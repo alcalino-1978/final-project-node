@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { isAuth } = require('../auth/jwt');
 const Doctor = require('../models/Doctor');
+const Patient = require('../models/Patient');
 
 const router = express.Router();
 
@@ -84,6 +85,12 @@ router.delete('/:id', [isAuth], async (req, res, next) => {
     const { id } = req.params;
     const nameDoctor = await Doctor.findById(id).lean();
     console.log(nameDoctor.fullName);
+
+    await Patient.updateMany({}, {
+      $pullAll: {
+          doctor: [{_id: id}],
+      },
+    });
     await Doctor.findByIdAndDelete(id);
     return res.status(200).json(`Doctor ${nameDoctor.fullName} has been deleted sucessfully!`)
   } catch (error) {
