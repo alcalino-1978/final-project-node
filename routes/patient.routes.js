@@ -90,18 +90,18 @@ router.delete('/:id', [isAuth], async (req, res, next) => {
   try {
     const { id } = req.params;
     const namePatient = await Patient.findById(id).lean();
-    const namePatientDoctor = await Doctor.findById(id).lean();
     console.log(namePatient.fullName);
     
     const patientRelations = await Doctor.find({}).select('patients -_id');
     console.log(patientRelations);
     patientRelations.forEach(async patient => {
-      for (const iterator of patient) {
-        if (iterator._id === id) {
-          iterator.remove();
-        }
+      console.log(patient);
+      // for (const iterator of patient) {
+      //   if (iterator._id === id) {
+      //     iterator.remove();
+      //   }
         
-      }
+      // }
     });
 
     await Patient.findByIdAndDelete(id);
