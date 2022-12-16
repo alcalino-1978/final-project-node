@@ -1,10 +1,7 @@
 const path = require('path');
 const multer = require('multer');
-const { Readable } = require("stream");
-const sharp = require("sharp");
+const streamifier = require("streamifier");
 
-// Importaremos las librerías necesarias para la nueva función
-const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
 const storage = multer.memoryStorage();
@@ -37,15 +34,6 @@ const upload = multer({
 
 // Ahora tenemos un nuevo middleware de subida de archivos
 const uploadToCloudinary = async (req, res, next) => {
-  const bufferToStream = (buffer) => {
-    const readable = new Readable({
-      read() {
-        this.push(buffer);
-        this.push(null);
-      },
-    });
-    return readable;
-  };
   const data = req.file.buffer;
   const stream = cloudinary.uploader.upload_stream(
     { folder: "DEV" },
@@ -55,7 +43,7 @@ const uploadToCloudinary = async (req, res, next) => {
       return next();
     }
   );
-  bufferToStream(data).pipe(stream);
+  streamifier.createReadStream(data).pipe(stream);
 };
 
 module.exports = { upload: upload, uploadToCloudinary };
