@@ -52,8 +52,8 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // Post patient
-router.post('/', [fileMiddleware.upload.single('picture'), fileMiddleware.uploadToCloudinary], async (req, res, next) => {
-  const cloudinaryUrl = req.file_url ? req.file_url : null;
+router.post('/', fileMiddleware.upload.single('image'), async (req, res, next) => {
+  const cloudinaryUrl = req.file.path ? req.file.path : null;
   const { fullName, age, gender, phoneNumber, email, insurance, registered, password, illness, doctor = 'Julius Hibbert' } = req.body;
   const patient = {
     fullName,
@@ -66,7 +66,7 @@ router.post('/', [fileMiddleware.upload.single('picture'), fileMiddleware.upload
     password,
     illness,
     doctor,
-    picture: cloudinaryUrl
+    image: cloudinaryUrl
   }
   try {
     const newPatient = new Patient(patient);

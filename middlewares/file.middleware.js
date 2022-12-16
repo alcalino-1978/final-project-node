@@ -1,19 +1,13 @@
-const path = require('path');
-const multer = require('multer');
-const streamifier = require("streamifier");
-
 const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const fs = require('fs');
 
-const storage = multer.memoryStorage();
-// const storage = multer.diskStorage({
-//     filename: (req, file, cb) => {
-//         console.log('filename ->', file);
-//         cb(null, `${Date.now()}-${file.originalname}`);
-//     },
-//     destination: (req, file, cb) => {
-//         cb(null, path.join(__dirname, '../tmp'))
-//     },
-// });
+cloudinary.config({
+  cloud_name: 'dzs1ujqtn',
+  api_key: '134183255414445',
+  api_secret: process.env.CLOUDINARY_SECRET
+});
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 
@@ -26,24 +20,18 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'images',
+    public_id: (req, file) => 'computed-filename-using-request',
+  },
+});
+ 
 const upload = multer({
-    // storage,
-    storage: storage,
-    fileFilter,
+  // storage,
+  storage: storage,
+  fileFilter,
 });
 
-// Ahora tenemos un nuevo middleware de subida de archivos
-const uploadToCloudinary = async (req, res, next) => {
-  const data = req.file.buffer;
-  const stream = cloudinary.uploader.upload_stream(
-    { folder: "DEV" },
-    (error, result) => {
-      if (error) return next(error);
-      req.file_url = result.secure_url;
-      return next();
-    }
-  );
-  streamifier.createReadStream(data).pipe(stream);
-};
-
-module.exports = { upload: upload, uploadToCloudinary };
+module.exports = { upload };
