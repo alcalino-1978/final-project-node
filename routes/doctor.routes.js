@@ -86,12 +86,12 @@ router.delete('/:id', [isAuth], async (req, res, next) => {
     const nameDoctor = await Doctor.findById(id).lean();
     console.log(nameDoctor.fullName);
 
-    await Patient.updateMany({}, {
-      $pullAll: {
-          doctor: [{_id: id}],
-      },
-    });
-    await Doctor.findByIdAndDelete(id);
+    // Para borrar las referencias del doctor en todos los pacientes
+    await Patient.updateMany(
+      {doctor: id}, // filtro de búsqueda
+      {$unset:  {doctor: 1}} // Con esto borramos el field doctor que concuerda con el filtro de búsqueda
+    );
+    await Doctor.findByIdAndDelete(id); // Borrado del doctor en la colección principal
     return res.status(200).json(`Doctor ${nameDoctor.fullName} has been deleted sucessfully!`)
   } catch (error) {
     next(error);
