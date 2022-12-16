@@ -37,7 +37,7 @@ const upload = multer({
 
 // Ahora tenemos un nuevo middleware de subida de archivos
 const uploadToCloudinary = async (req, res, next) => {
-	const bufferToStream = (buffer) => {
+  const bufferToStream = (buffer) => {
     const readable = new Readable({
       read() {
         this.push(buffer);
@@ -46,7 +46,7 @@ const uploadToCloudinary = async (req, res, next) => {
     });
     return readable;
   };
-  const data = await sharp(req.file.buffer).toBuffer();
+  const data = req.file.buffer;
   const stream = cloudinary.uploader.upload_stream(
     { folder: "DEV" },
     (error, result) => {
