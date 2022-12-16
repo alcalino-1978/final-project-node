@@ -23,9 +23,27 @@ const fileFilter = (req, file, cb) => {
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'images',
-    format: async (req, file) => 'jpg', // supports promises as well
-    public_id: (req, file) => 'computed-filename-using-request',
+    folder: '/images',
+    format: async (req, file) => {
+      const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
+
+      if (!VALID_FILE_TYPES.includes(file.mimetype)) {
+        //formato no valido de imagen (ver error)
+      } else {
+        //devolver formato con el string cortado.
+        var type = file.mimetype.substring(file.mimetype.indexOf('/')+1);
+        return type;
+      }
+    },  
+    public_id: (req, file) => {
+      const imageName = file.originalname.substring(0 ,file.originalname.indexOf('.'));
+
+      if(imageName != null){
+        return imageName
+      }else{
+        return 'nombre por defecto'
+      }
+    }
   },
 });
  
