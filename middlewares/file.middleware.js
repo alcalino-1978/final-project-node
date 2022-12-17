@@ -1,34 +1,61 @@
+const path = require('path');
 const multer = require('multer');
+const { Readable } = require("stream");
+const sharp = require("sharp");
+
+// Importaremos las librerías necesarias para la nueva función
+const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: '/multer',
-    format: async (req, file) => {
-      const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
+const storage = multer.memoryStorage();
+// const storage = multer.diskStorage({
+//     filename: (req, file, cb) => {
+//         console.log('filename ->', file);
+//         cb(null, `${Date.now()}-${file.originalname}`);
+//     },
+//     destination: (req, file, cb) => {
+//         cb(null, path.join(__dirname, '../tmp'))
+//     },
+// });
 
-      if (!VALID_FILE_TYPES.includes(file.mimetype)) {
-        //formato no valido de imagen (ver error)
-      } else {
-        //devolver formato con el string cortado.
-        var type = file.mimetype.substring(file.mimetype.indexOf('/')+1);
-        return type;
-      }
-    },  
-    public_id: (req, file) => {
-      const imageName = file.originalname.substring(0 ,file.originalname.indexOf('.'));
+const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 
-      if(imageName != null){
-        return imageName
-      }else{
-        return 'nombre por defecto'
-      }
+const fileFilter = (req, file, cb) => {
+    if (!VALID_FILE_TYPES.includes(file.mimetype)) {
+        const error = new Error("Invalid file type");
+        cb(error)
+    } else {
+        cb(null, true);
     }
-  },
+};
+
+const upload = multer({
+    // storage,
+    storage: storage,
+    fileFilter,
 });
 
-const parser = multer({ storage: storage });
+// Ahora tenemos un nuevo middleware de subida de archivos
+const uploadToCloudinary = async (req, res, next) => {
+	const bufferToStream = (buffer) => {
+    const readable = new Readable({
+      read() {
+        this.push(buffer);
+        this.push(null);
+      },
+    });
+    return readable;
+  };
+  const data = await sharp(req.file.buffer).toBuffer();
+  const stream = cloudinary.uploader.upload_stream(
+    { folder: "DEV" },
+    (error, result) => {
+      if (error) return next(error);
+      req.file_url = result.secure_url;
+      return next();
+    }
+  );
+  bufferToStream(data).pipe(stream);
+};
 
-module.exports = { parser };
+module.exports = { upload: upload, uploadToCloudinary };
