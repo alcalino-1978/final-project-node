@@ -4,19 +4,9 @@ const { Readable } = require("stream");
 const sharp = require("sharp");
 
 // Importaremos las librerías necesarias para la nueva función
-const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
 
 const storage = multer.memoryStorage();
-// const storage = multer.diskStorage({
-//     filename: (req, file, cb) => {
-//         console.log('filename ->', file);
-//         cb(null, `${Date.now()}-${file.originalname}`);
-//     },
-//     destination: (req, file, cb) => {
-//         cb(null, path.join(__dirname, '../tmp'))
-//     },
-// });
 
 const VALID_FILE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
 
