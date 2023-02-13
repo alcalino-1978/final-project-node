@@ -10,10 +10,10 @@ const jwt = require("jsonwebtoken");
 const register = async (req, res, next) => {
   try {
     const newUser = new User();
-    newUser.email = req.body.email;
     newUser.name = req.body.name;
     newUser.lastName = req.body.lastName;
     newUser.phoneNumber = req.body.phoneNumber;
+    newUser.email = req.body.email;
     const pwdHash = await bcrypt.hash(req.body.password, 10);
     newUser.password = pwdHash;
     console.log(newUser.id);
