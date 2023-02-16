@@ -19,6 +19,22 @@ const PORT = process.env.PORT || 3000;
 const patientsRoutes = require('./routes/patient.routes');
 const doctorsRoutes = require('./routes/doctor.routes');
 const userRoutes = require('./routes/user.routes');
+
+//CORS CONFIG
+const whitelist = ['http://localhost:4200']; //white list consumers
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true, //Credentials are cookies, authorization headers or TLS client certificates.
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
+};
 // const insuranceRoutes = require('./routes/insurance.routes');
 
 app.get('/', (req, res) => {
@@ -38,7 +54,7 @@ app.use(express.urlencoded({ extended: true }));
 //   res.header('Access-Control-Allow-Origin', '*');
 //   next();
 // });
-app.use(cors());
+app.use(cors(corsOptions));
 app.set('secretKey', 'nodeRestApi'); // Config JWT
 
 //Routes
