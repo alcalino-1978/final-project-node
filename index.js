@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 //   res.header('Access-Control-Allow-Origin', '*');
 //   next();
 // });
-app.use(cors());
+// app.use(cors());
 app.set('secretKey', 'nodeRestApi'); // Config JWT
 
 //Routes
