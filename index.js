@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors'); 
 require('dotenv').config();
 
 // Auth
@@ -30,13 +31,14 @@ app.set('view engine', 'ejs')
 // Middlewares config
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//   res.header('Access-Control-Allow-Credentials', true);
+//   res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+//   res.header('Access-Control-Allow-Origin', '*');
+//   next();
+// });
+app.use(cors());
 app.set('secretKey', 'nodeRestApi'); // Config JWT
 
 //Routes
