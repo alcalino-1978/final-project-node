@@ -121,6 +121,22 @@ const isAuth = (req, res, next) => {
   next();
 }
 
+const deleteUser = async ( req, res, next) => {
+
+  try {
+    const result = await User.exists({ email: req.body.email });
+    if (!result) {
+      return res.status(404).json('This User not exists!');
+    } else {
+      const userDelete = await User.findOne({ email: req.body.email })
+      await User.findByIdAndDelete(userDelete.id);
+      return res.status(200).json('User deleted!');
+    }
+  } catch (error) {
+    return next(error);
+  }
+}
+
 
 //funcion logout, iguala el token a null.
 const logout = (req, res, next) => {
@@ -139,5 +155,6 @@ module.exports = {
   register,
   login,
   isAuth,
-  logout
+  logout,
+  deleteUser
 }
