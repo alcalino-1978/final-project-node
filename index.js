@@ -20,7 +20,7 @@ const doctorsRoutes = require("./routes/doctor.routes");
 const userRoutes = require("./routes/user.routes");
 
 //CORS CONFIG
-const whitelist = ["http://localhost:4200"]; //white list consumers
+const whitelist = ["http://localhost:4200", "http://localhost:63022"]; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -64,7 +64,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(cors(corsOptions));
 app.use(
   cors({
-    origin: "http://localhost:4200",
+    origin: whitelist,
   })
 );
 app.set("secretKey", "nodeRestApi"); // Config JWT
