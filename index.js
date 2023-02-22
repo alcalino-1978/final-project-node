@@ -20,7 +20,11 @@ const doctorsRoutes = require("./routes/doctor.routes");
 const userRoutes = require("./routes/user.routes");
 
 //CORS CONFIG
-const whitelist = ["http://localhost:4200", "http://localhost:63022"]; //white list consumers
+const whitelist = [
+  "http://localhost:4200", 
+  "http://localhost:63022", 
+  "https://final-project-angular.vercel.app/"
+]; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
