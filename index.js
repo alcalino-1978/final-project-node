@@ -65,12 +65,12 @@ app.use(express.urlencoded({ extended: true }));
 //   res.header('Access-Control-Allow-Origin', '*');
 //   next();
 // });
-// app.use(cors(corsOptions));
-app.use(
-  cors({
-    origin: whitelist,
-  })
-);
+app.use(cors(corsOptions));
+// app.use(
+//   cors({
+//     origin: whitelist,
+//   })
+// );
 app.set("secretKey", "nodeRestApi"); // Config JWT
 
 //Routes
